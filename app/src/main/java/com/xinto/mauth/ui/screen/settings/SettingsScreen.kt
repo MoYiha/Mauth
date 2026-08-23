@@ -221,6 +221,7 @@ fun SettingsScreen(
                 )
             }
             SettingsGroup(header = { Text(stringResource(R.string.settings_category_appearance)) }) {
+                val count = if (showMeshGradient) 3 else 2
                 SettingsNavigateItem(
                     onClick = onThemeNavigate,
                     title = { Text(stringResource(R.string.settings_prefs_theme)) },
@@ -233,7 +234,7 @@ fun SettingsScreen(
                             contentDescription = null
                         )
                     },
-                    shapes = ListItemDefaults.segmentedShapes(index = 0, count = 2)
+                    shapes = ListItemDefaults.segmentedShapes(index = 0, count = count)
                 )
                 SettingsNavigateItem(
                     onClick = { fontDialogIsOpen = true },
@@ -245,7 +246,7 @@ fun SettingsScreen(
                             contentDescription = null
                         )
                     },
-                    shapes = ListItemDefaults.segmentedShapes(index = 1, count = 2)
+                    shapes = ListItemDefaults.segmentedShapes(index = 1, count = count)
                 )
                 if (showMeshGradient) {
                     SettingsSwitchItem(
@@ -259,7 +260,7 @@ fun SettingsScreen(
                                 contentDescription = null
                             )
                         },
-                        shapes = ListItemDefaults.segmentedShapes(index = 2, count = 3)
+                        shapes = ListItemDefaults.segmentedShapes(index = 2, count = count)
                     )
                 }
             }
