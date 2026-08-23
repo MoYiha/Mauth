@@ -34,7 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xinto.mauth.R
+import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
+import com.xinto.mauth.core.settings.model.ThemeSetting
 import com.xinto.mauth.ui.component.rememberBiometricHandler
 import com.xinto.mauth.ui.component.rememberBiometricPromptData
 import com.xinto.mauth.ui.preview.PreviewAllConfigurations
@@ -58,6 +60,8 @@ fun SettingsScreen(
     val pinLock by viewModel.pinLock.collectAsStateWithLifecycle()
     val biometrics by viewModel.biometrics.collectAsStateWithLifecycle()
     val font by viewModel.font.collectAsStateWithLifecycle()
+    val theme by viewModel.theme.collectAsStateWithLifecycle()
+    val color by viewModel.color.collectAsStateWithLifecycle()
     val meshGradientBackground by viewModel.meshGradientBackground.collectAsStateWithLifecycle()
 
     val biometricHandler = rememberBiometricHandler(
@@ -96,6 +100,8 @@ fun SettingsScreen(
             biometricHandler.requestBiometrics(promptData)
         },
         onThemeNavigate = onThemeNavigate,
+        theme = theme,
+        color = color,
         font = font,
         onFontChange = viewModel::updateFont
     )
@@ -117,6 +123,8 @@ fun SettingsScreen(
     biometrics: Boolean,
     onBiometricsChange: (Boolean) -> Unit,
     onThemeNavigate: () -> Unit,
+    theme: ThemeSetting,
+    color: ColorSetting,
     font: FontSetting,
     onFontChange: (FontSetting) -> Unit,
     modifier: Modifier = Modifier
@@ -216,6 +224,9 @@ fun SettingsScreen(
                 SettingsNavigateItem(
                     onClick = onThemeNavigate,
                     title = { Text(stringResource(R.string.settings_prefs_theme)) },
+                    description = {
+                        Text(stringResource(R.string.settings_prefs_theme_description, stringResource(theme.labelRes), stringResource(color.labelRes)))
+                    },
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_brush),
@@ -227,6 +238,7 @@ fun SettingsScreen(
                 SettingsNavigateItem(
                     onClick = { fontDialogIsOpen = true },
                     title = { Text(stringResource(R.string.settings_prefs_font)) },
+                    description = { Text(stringResource(font.labelRes)) },
                     icon = {
                         Icon(
                             painter = painterResource(R.drawable.ic_font),
@@ -285,6 +297,8 @@ private fun SettingsScreen_Default_Preview() {
                 biometrics = false,
                 onBiometricsChange = {},
                 onThemeNavigate = {},
+                theme = ThemeSetting.DEFAULT,
+                color = ColorSetting.MothPurple,
                 font = FontSetting.DEFAULT,
                 onFontChange = {}
             )
@@ -312,6 +326,8 @@ private fun SettingsScreen_AllEnabled_Preview() {
                 biometrics = true,
                 onBiometricsChange = {},
                 onThemeNavigate = {},
+                theme = ThemeSetting.DEFAULT,
+                color = ColorSetting.MothPurple,
                 font = FontSetting.DEFAULT,
                 onFontChange = {}
             )
