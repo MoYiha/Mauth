@@ -96,16 +96,17 @@ fun PinScaffold(
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                     PinDisplay(
-                        modifier = Modifier
-                            .fillMaxWidth(0.5f),
+                        modifier = Modifier.fillMaxWidth(),
                         length = codeLength,
                         error = error,
                     )
                 }
                 PinBoard(
-                    modifier = Modifier.widthIn(max = 250.dp),
-                    horizontalButtonSpace = 16.dp,
+                    modifier = Modifier.weight(1f),
+                    horizontalButtonSpace = 12.dp,
+                    verticalButtonSpace = 8.dp,
                     minButtonSize = PinButtonDefaults.PinButtonSmallMinSize,
+                    maxButtonSize = 62.dp,
                     state = state
                 )
             }
@@ -114,7 +115,7 @@ fun PinScaffold(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it)
-                    .padding(start = 40.dp, top = 40.dp, end = 40.dp, bottom = 24.dp),
+                    .padding(start = 24.dp, top = 40.dp, end = 24.dp, bottom = 24.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -146,16 +147,12 @@ fun PinScaffold(
                         }
                     }
                     PinDisplay(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         length = codeLength,
                         error = error,
                     )
                     PinBoard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp)
-                            .padding(top = 32.dp),
+                        modifier = Modifier.padding(top = 32.dp),
                         state = state
                     )
                 }
@@ -209,3 +206,4 @@ fun PinScaffold_MeshGradient_WithoutDescription() {
         )
     }
 }
+
