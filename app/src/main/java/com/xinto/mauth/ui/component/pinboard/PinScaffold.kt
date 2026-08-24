@@ -1,11 +1,5 @@
 package com.xinto.mauth.ui.component.pinboard
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,15 +23,9 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.MeshGradientPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -75,13 +63,7 @@ fun PinScaffold(
         contentWindowInsets = contentWindowInsets,
     ) {
         if (useMeshGradientBackground) {
-            Box(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .paint(getGradientPainter())
-                    .blur(64.dp)
-                    .fillMaxSize()
-            )
+            MeshGradientBackground(modifier = Modifier.fillMaxSize())
         }
 
         if (!windowAdaptiveInfo.windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)) {
@@ -183,58 +165,6 @@ fun PinScaffold(
 }
 
 @Composable
-fun getGradientPainter(): MeshGradientPainter {
-    // https://developer.android.com/develop/ui/compose/graphics/draw/mesh-gradient#animate-mesh-gradient
-    val infiniteTransition = rememberInfiniteTransition(label = "meshMovement")
-    val animatedOffset by infiniteTransition.animateFloat(
-        initialValue = -0.1f,
-        targetValue = 0.1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2500, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "offset"
-    )
-
-    val surface = MaterialTheme.colorScheme.surface
-    val surfaceContainer = MaterialTheme.colorScheme.surfaceVariant
-    val surfaceContainerHigh = MaterialTheme.colorScheme.surfaceContainerHigh
-    val surfaceContainerHghest = MaterialTheme.colorScheme.surfaceContainerHighest
-    val surfaceContainerLow = MaterialTheme.colorScheme.surfaceContainerLow
-
-    val gradientPainter = remember {
-        MeshGradientPainter(rows = 3, columns = 3) {
-            setVertex(0, 0, Offset(0.0f, 0.0f), surfaceContainerLow)
-            setVertex(0, 1, Offset(0.3f, 0.0f), surfaceContainer)
-            setVertex(0, 2, Offset(0.7f, 0.0f), surfaceContainerHigh)
-            setVertex(0, 3, Offset(1.0f, 0.0f), surfaceContainerHghest)
-
-            setVertex(1, 0, Offset(0.0f, 0.3f), surface)
-            setVertex(1, 1, Offset(0.2f, 0.4f) + Offset(animatedOffset, animatedOffset), surface)
-            setVertex(
-                1,
-                2,
-                Offset(0.7f, 0.2f) + Offset(animatedOffset, animatedOffset),
-                surfaceContainer
-            )
-            setVertex(1, 3, Offset(1.0f, 0.3f), surfaceContainerLow)
-
-            setVertex(2, 0, Offset(0.0f, 0.7f), surface)
-            setVertex(2, 1, Offset(0.3f, 0.8f) + Offset(animatedOffset, 0f), surface)
-            setVertex(2, 2, Offset(0.7f, 0.6f) + Offset(animatedOffset, 0f), surfaceContainerHghest)
-            setVertex(2, 3, Offset(1.0f, 0.7f), surfaceContainerHigh)
-
-            setVertex(3, 0, Offset(0.0f, 1.0f), surfaceContainerHghest)
-            setVertex(3, 1, Offset(0.3f, 1.0f), surfaceContainerHigh)
-            setVertex(3, 2, Offset(0.7f, 1.0f), surface)
-            setVertex(3, 3, Offset(1.0f, 1.0f), surfaceContainerLow)
-        }
-    }
-
-    return gradientPainter
-}
-
-@Composable
 @PreviewAllConfigurations
 fun PinScaffold_WithDescription() {
     MauthTheme {
@@ -250,6 +180,32 @@ fun PinScaffold_WithDescription() {
 @PreviewAllConfigurations
 fun PinScaffold_WithoutDescription() {
     MauthTheme {
-        PinScaffold(codeLength = 5, useMeshGradientBackground = false)
+        PinScaffold(
+            codeLength = 5,
+            useMeshGradientBackground = false
+        )
+    }
+}
+
+@Composable
+@PreviewAllConfigurations
+fun PinScaffold_MeshGradient_WithDescription() {
+    MauthTheme {
+        PinScaffold(
+            description = { Text("Enter PIN") },
+            codeLength = 5,
+            useMeshGradientBackground = true
+        )
+    }
+}
+
+@Composable
+@PreviewAllConfigurations
+fun PinScaffold_MeshGradient_WithoutDescription() {
+    MauthTheme {
+        PinScaffold(
+            codeLength = 5,
+            useMeshGradientBackground = true
+        )
     }
 }
