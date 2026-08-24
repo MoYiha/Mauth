@@ -253,7 +253,8 @@ fun SettingsScreen(
                         onCheckedChange = onMeshGradientBackgroundChange,
                         checked = meshGradientBackground,
                         enabled = pinCode,
-                        title = { Text(stringResource(R.string.settings_prefs_mesh_gradient)) },
+                        title = { Text(stringResource(R.string.settings_prefs_animatedbackground)) },
+                        description = { Text(stringResource(R.string.settings_prefs_animatedbackground_description)) },
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.ic_gradient),
