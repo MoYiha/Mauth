@@ -29,8 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowSizeClass
 import com.xinto.mauth.ui.preview.PreviewAllConfigurations
+import com.xinto.mauth.ui.util.isHeightAtLeastMedium
+import com.xinto.mauth.ui.util.isWidthAtLeastMedium
 import com.xinto.mauth.ui.theme.MauthTheme
 
 @Composable
@@ -66,7 +67,7 @@ fun PinScaffold(
             MeshGradientBackground(modifier = Modifier.fillMaxSize())
         }
 
-        if (!windowAdaptiveInfo.windowSizeClass.isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)) {
+        if (!windowAdaptiveInfo.windowSizeClass.isHeightAtLeastMedium) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -122,10 +123,11 @@ fun PinScaffold(
                     modifier = Modifier
                         .fillMaxHeight()
                         .widthIn(
-                            max = if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(
-                                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-                                )
-                            ) 400.dp else Dp.Unspecified
+                            max = if (windowAdaptiveInfo.windowSizeClass.isWidthAtLeastMedium) {
+                                400.dp
+                            } else {
+                                Dp.Unspecified
+                            }
                         ),
                     verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                     horizontalAlignment = Alignment.CenterHorizontally
