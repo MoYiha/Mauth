@@ -28,9 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.TextFieldState
@@ -113,6 +110,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xinto.mauth.R
 import com.xinto.mauth.core.otp.model.OtpDigest
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.SortSetting
 import com.xinto.mauth.domain.account.model.DomainAccount
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
@@ -151,6 +149,7 @@ fun HomeScreen(
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val activeGroup by viewModel.activeGroup.collectAsStateWithLifecycle()
     val searchAccounts by viewModel.searchAccounts.collectAsStateWithLifecycle()
+    val accountsLayout by viewModel.accountsLayout.collectAsStateWithLifecycle()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         viewModel.getAccountInfoFromQrUri(uri)?.let {
@@ -247,6 +246,7 @@ fun HomeScreen(
             }
         },
         searchAccounts = searchAccounts,
+        accountsLayout = accountsLayout,
         showScanButton = hasCamera,
     )
 }
@@ -274,6 +274,7 @@ fun HomeScreen(
     onCreateGroupClick: () -> Unit,
     onGroupSelectedClick: () -> Unit,
     searchAccounts: ImmutableList<DomainAccount>,
+    accountsLayout: AccountsLayoutSetting,
     modifier: Modifier = Modifier,
     showScanButton: Boolean
 ) {
@@ -426,34 +427,30 @@ fun HomeScreen(
                     }
                 }
                 is HomeScreenState.Success -> {
-                    LazyVerticalGrid(
-                        modifier = contentModifier,
-                        contentPadding = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 88.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        columns = GridCells.Adaptive(minSize = 250.dp),
-                    ) {
-                        items(items = state.accounts, key = { it.id }) { account ->
-                            val realtimeData = accountRealtimeData[account.id]
-                            if (realtimeData != null) {
-                                AccountCard(
-                                    onClick = {
-                                        if (selectedAccounts.isNotEmpty()) {
-                                            onAccountSelect(account.id)
-                                        }
-                                    },
-                                    onLongClick = { onAccountSelect(account.id) },
-                                    onEdit = { onAccountEdit(account.id) },
-                                    onCounterClick = { onAccountCounterIncrease(account.id) },
-                                    onCopyCode = { onAccountCopyCode(account.label, realtimeData.code, it) },
-                                    account = account,
-                                    realtimeData = realtimeData,
-                                    selected = selectedAccounts.contains(account.id),
-                                    selectionActive = selectedAccounts.isNotEmpty(),
-                                    colors = CardDefaults.elevatedCardColors(),
-                                    elevation = CardDefaults.elevatedCardElevation()
-                                )
-                            }
+                    when (accountsLayout) {
+                        AccountsLayoutSetting.Cards -> {
+                            AccountCardGrid(
+                                modifier = contentModifier,
+                                accounts = state.accounts,
+                                accountRealtimeData = accountRealtimeData,
+                                selectedAccounts = selectedAccounts,
+                                onAccountSelect = onAccountSelect,
+                                onAccountEdit = onAccountEdit,
+                                onAccountCounterIncrease = onAccountCounterIncrease,
+                                onAccountCopyCode = onAccountCopyCode,
+                            )
+                        }
+                        AccountsLayoutSetting.Compact -> {
+                            AccountCompactGrid(
+                                modifier = contentModifier,
+                                accounts = state.accounts,
+                                accountRealtimeData = accountRealtimeData,
+                                selectedAccounts = selectedAccounts,
+                                onAccountSelect = onAccountSelect,
+                                onAccountEdit = onAccountEdit,
+                                onAccountCounterIncrease = onAccountCounterIncrease,
+                                onAccountCopyCode = onAccountCopyCode,
+                            )
                         }
                     }
                 }
@@ -483,6 +480,7 @@ fun HomeScreen(
             onAccountCopyCode = onAccountCopyCode,
             selectedAccounts = selectedAccounts,
             accountRealtimeData = accountRealtimeData,
+            accountsLayout = accountsLayout,
         )
     }
     if (isExpandedWidth) {
@@ -689,6 +687,7 @@ private fun ColumnScope.SearchResults(
     onAccountCopyCode: (String, String, Boolean) -> Unit,
     selectedAccounts: SnapshotStateList<UUID>,
     accountRealtimeData: SnapshotStateMap<UUID, DomainOtpRealtimeData>,
+    accountsLayout: AccountsLayoutSetting,
 ) {
     val query = searchTextFieldState.text.toString().trim()
     val filteredAccounts = remember(searchAccounts, query) {
@@ -700,26 +699,34 @@ private fun ColumnScope.SearchResults(
         }
     }
     if (filteredAccounts.isNotEmpty()) {
-        LazyColumn(
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(items = filteredAccounts, key = { it.id }) { account ->
-                val realtimeData = accountRealtimeData[account.id]
-                if (realtimeData != null) {
-                    AccountCard(
-                        onClick = {},
-                        onLongClick = {},
-                        onEdit = { onAccountEdit(account.id) },
-                        onCounterClick = { onAccountCounterIncrease(account.id) },
-                        onCopyCode = { onAccountCopyCode(account.label, realtimeData.code, it) },
-                        account = account,
-                        realtimeData = realtimeData,
-                        selected = selectedAccounts.contains(account.id),
-                        selectionActive = selectedAccounts.isNotEmpty(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                    )
-                }
+        when (accountsLayout) {
+            AccountsLayoutSetting.Cards -> {
+                AccountCardGrid(
+                    accounts = filteredAccounts,
+                    accountRealtimeData = accountRealtimeData,
+                    selectedAccounts = selectedAccounts,
+                    onAccountSelect = {},
+                    onAccountEdit = onAccountEdit,
+                    onAccountCounterIncrease = onAccountCounterIncrease,
+                    onAccountCopyCode = onAccountCopyCode,
+                    contentPadding = PaddingValues(16.dp),
+                    selectionEnabled = false,
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                    elevation = CardDefaults.cardElevation(),
+                )
+            }
+            AccountsLayoutSetting.Compact -> {
+                AccountCompactGrid(
+                    accounts = filteredAccounts,
+                    accountRealtimeData = accountRealtimeData,
+                    selectedAccounts = selectedAccounts,
+                    onAccountSelect = {},
+                    onAccountEdit = onAccountEdit,
+                    onAccountCounterIncrease = onAccountCounterIncrease,
+                    onAccountCopyCode = onAccountCopyCode,
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    selectionEnabled = false,
+                )
             }
         }
     } else if (query.isNotEmpty()) {
@@ -1105,6 +1112,7 @@ private fun HomeScreen_Loading_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1138,6 +1146,7 @@ private fun HomeScreen_Empty_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1197,6 +1206,67 @@ private fun HomeScreen_Success_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                modifier = Modifier.fillMaxSize(),
+                showScanButton = false
+            )
+        }
+    }
+}
+
+@Composable
+@PreviewAllConfigurations
+private fun HomeScreen_Compact_Preview() {
+    val totp = DomainAccount.Totp(
+        id = UUID.fromString("00000000-0000-0000-0000-000000000001"),
+        icon = null,
+        secret = "JBSWY3DPEHPK3PXP",
+        label = "GitHub",
+        issuer = "github.com",
+        algorithm = OtpDigest.SHA1,
+        digits = 6,
+        createdMillis = 0L,
+        period = 30
+    )
+    val hotp = DomainAccount.Hotp(
+        id = UUID.fromString("00000000-0000-0000-0000-000000000002"),
+        icon = null,
+        secret = "JBSWY3DPEHPK3PXP",
+        label = "Amazon",
+        issuer = "amazon.com",
+        algorithm = OtpDigest.SHA1,
+        digits = 6,
+        createdMillis = 0L
+    )
+    MauthTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeScreen(
+                onAddAccountNavigate = {},
+                onMoreMenuNavigate = {},
+                onAccountSelect = {},
+                onCancelAccountSelection = {},
+                onDeleteSelectedAccounts = {},
+                onExportSelectedAccounts = {},
+                onAccountEdit = {},
+                onAccountCounterIncrease = {},
+                onAccountCopyCode = { _, _, _ -> },
+                state = HomeScreenState.Success(persistentListOf(totp, hotp)),
+                accountRealtimeData = remember {
+                    mutableStateMapOf(
+                        totp.id to DomainOtpRealtimeData.Totp(code = "123456", progress = 0.6f, countdown = 18),
+                        hotp.id to DomainOtpRealtimeData.Hotp(code = "654321", count = 3)
+                    )
+                },
+                selectedAccounts = remember { mutableStateListOf<UUID>() },
+                activeSortSetting = SortSetting.entries.first(),
+                onActiveSortChange = {},
+                groups = persistentListOf(),
+                activeGroup = GroupFilter.All,
+                onActiveGroupChange = {},
+                onCreateGroupClick = {},
+                onGroupSelectedClick = {},
+                searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.Compact,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1256,6 +1326,7 @@ private fun HomeScreen_Selection_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1328,6 +1399,7 @@ private fun HomeScreen_Groups_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1361,6 +1433,7 @@ private fun HomeScreen_Error_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )

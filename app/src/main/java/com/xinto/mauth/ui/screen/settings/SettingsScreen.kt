@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xinto.mauth.R
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.ThemeSetting
@@ -63,6 +64,7 @@ fun SettingsScreen(
     val theme by viewModel.theme.collectAsStateWithLifecycle()
     val color by viewModel.color.collectAsStateWithLifecycle()
     val meshGradientBackground by viewModel.meshGradientBackground.collectAsStateWithLifecycle()
+    val accountsLayout by viewModel.accountsLayout.collectAsStateWithLifecycle()
 
     val biometricHandler = rememberBiometricHandler(
         onAuthSuccess = viewModel::toggleBiometrics
@@ -103,7 +105,9 @@ fun SettingsScreen(
         theme = theme,
         color = color,
         font = font,
-        onFontChange = viewModel::updateFont
+        onFontChange = viewModel::updateFont,
+        accountsLayout = accountsLayout,
+        onAccountsLayoutChange = viewModel::updateAccountsLayout
     )
 }
 
@@ -127,10 +131,13 @@ fun SettingsScreen(
     color: ColorSetting,
     font: FontSetting,
     onFontChange: (FontSetting) -> Unit,
+    accountsLayout: AccountsLayoutSetting,
+    onAccountsLayoutChange: (AccountsLayoutSetting) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var fontDialogIsOpen by rememberSaveable { mutableStateOf(false) }
+    var accountsLayoutDialogIsOpen by rememberSaveable { mutableStateOf(false) }
     val showMeshGradient = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
     Scaffold(
@@ -221,7 +228,7 @@ fun SettingsScreen(
                 )
             }
             SettingsGroup(header = { Text(stringResource(R.string.settings_category_appearance)) }) {
-                val count = if (showMeshGradient) 3 else 2
+                val count = if (showMeshGradient) 4 else 3
                 SettingsNavigateItem(
                     onClick = onThemeNavigate,
                     title = { Text(stringResource(R.string.settings_prefs_theme)) },
@@ -248,6 +255,18 @@ fun SettingsScreen(
                     },
                     shapes = ListItemDefaults.segmentedShapes(index = 1, count = count)
                 )
+                SettingsNavigateItem(
+                    onClick = { accountsLayoutDialogIsOpen = true },
+                    title = { Text(stringResource(R.string.settings_prefs_accountslayout)) },
+                    description = { Text(stringResource(accountsLayout.labelRes)) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_view_agenda),
+                            contentDescription = null
+                        )
+                    },
+                    shapes = ListItemDefaults.segmentedShapes(index = 2, count = count)
+                )
                 if (showMeshGradient) {
                     SettingsSwitchItem(
                         onCheckedChange = onMeshGradientBackgroundChange,
@@ -261,11 +280,21 @@ fun SettingsScreen(
                                 contentDescription = null
                             )
                         },
-                        shapes = ListItemDefaults.segmentedShapes(index = 2, count = count)
+                        shapes = ListItemDefaults.segmentedShapes(index = 3, count = count)
                     )
                 }
             }
         }
+    }
+    if (accountsLayoutDialogIsOpen) {
+        AccountLayoutDialog(
+            initialLayout = accountsLayout,
+            onConfirm = { newLayout ->
+                onAccountsLayoutChange(newLayout)
+                accountsLayoutDialogIsOpen = false
+            },
+            onDismissRequest = { accountsLayoutDialogIsOpen = false }
+        )
     }
     if (fontDialogIsOpen) {
         FontDialog(
@@ -302,7 +331,9 @@ private fun SettingsScreen_Default_Preview() {
                 theme = ThemeSetting.DEFAULT,
                 color = ColorSetting.MothPurple,
                 font = FontSetting.DEFAULT,
-                onFontChange = {}
+                onFontChange = {},
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                onAccountsLayoutChange = {}
             )
         }
     }
@@ -331,7 +362,9 @@ private fun SettingsScreen_AllEnabled_Preview() {
                 theme = ThemeSetting.DEFAULT,
                 color = ColorSetting.MothPurple,
                 font = FontSetting.DEFAULT,
-                onFontChange = {}
+                onFontChange = {},
+                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                onAccountsLayoutChange = {}
             )
         }
     }

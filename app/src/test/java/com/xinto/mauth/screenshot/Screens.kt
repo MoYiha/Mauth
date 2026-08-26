@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.ThemeSetting
@@ -95,6 +96,7 @@ private fun HomeAccountsFixture(
         onCreateGroupClick = {},
         onGroupSelectedClick = {},
         searchAccounts = persistentListOf(),
+        accountsLayout = AccountsLayoutSetting.DEFAULT,
         modifier = Modifier.fillMaxSize(),
         showScanButton = false
     )
@@ -138,6 +140,8 @@ private fun SettingsFixture() {
         color = ColorSetting.MothPurple,
         font = FontSetting.DEFAULT,
         onFontChange = {},
+        accountsLayout = AccountsLayoutSetting.DEFAULT,
+        onAccountsLayoutChange = {},
         modifier = Modifier.fillMaxSize(),
     )
 }

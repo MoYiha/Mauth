@@ -2,6 +2,7 @@ package com.xinto.mauth.ui.screen.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.domain.AuthRepository
 import com.xinto.mauth.domain.SettingsRepository
@@ -21,6 +22,7 @@ class SettingsViewModel(
     val theme = settings.getTheme()
     val color = settings.getColor()
     val meshGradientBackground = settings.getUseMeshGradientBackground()
+    val accountsLayout = settings.getAccountsLayout()
 
     val pinLock = authRepository.observeIsProtected()
         .stateIn(
@@ -50,6 +52,12 @@ class SettingsViewModel(
     fun updateFont(newFont: FontSetting) {
         viewModelScope.launch {
             settings.setFont(newFont)
+        }
+    }
+
+    fun updateAccountsLayout(newLayout: AccountsLayoutSetting) {
+        viewModelScope.launch {
+            settings.setAccountsLayout(newLayout)
         }
     }
 

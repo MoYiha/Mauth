@@ -1,5 +1,6 @@
 package com.xinto.mauth.core.settings
 
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.SortSetting
@@ -12,6 +13,7 @@ interface Settings {
     fun getUseBiometrics(): StateFlow<Boolean>
     fun getUseMeshGradientBackground(): StateFlow<Boolean>
     fun getSortMode(): StateFlow<SortSetting>
+    fun getAccountsLayout(): StateFlow<AccountsLayoutSetting>
     fun getTheme(): StateFlow<ThemeSetting>
     fun getColor(): StateFlow<ColorSetting>
     fun getFont(): StateFlow<FontSetting>
@@ -21,6 +23,7 @@ interface Settings {
     suspend fun setUseBiometrics(value: Boolean)
     suspend fun setUseMeshGradientBackground(value: Boolean)
     suspend fun setSortMode(value: SortSetting)
+    suspend fun setAccountsLayout(value: AccountsLayoutSetting)
     suspend fun setTheme(value: ThemeSetting)
     suspend fun setColor(value: ColorSetting)
     suspend fun setFont(value: FontSetting)

@@ -107,6 +107,8 @@ class HomeViewModel(
 
     val activeSortSetting = settings.getSortMode()
 
+    val accountsLayout = settings.getAccountsLayout()
+
     fun copyCodeToClipboard(label: String, code: String, visible: Boolean) {
         val application = getApplication<Mauth>()
         val clipboardService = application.getSystemService<ClipboardManager>() ?: return

@@ -2,6 +2,7 @@ package com.xinto.mauth.ui.screen.settings
 
 import androidx.annotation.StringRes
 import com.xinto.mauth.R
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.ThemeSetting
@@ -31,4 +32,11 @@ val ColorSetting.labelRes: Int
         ColorSetting.ToxicGreen -> R.string.theme_colors_green
         ColorSetting.LeatherOrange -> R.string.theme_colors_orange
         ColorSetting.OceanTurquoise -> R.string.theme_colors_turquoise
+    }
+
+@get:StringRes
+val AccountsLayoutSetting.labelRes: Int
+    get() = when (this) {
+        AccountsLayoutSetting.Cards -> R.string.accountslayout_layout_cards
+        AccountsLayoutSetting.Compact -> R.string.accountslayout_layout_compact
     }

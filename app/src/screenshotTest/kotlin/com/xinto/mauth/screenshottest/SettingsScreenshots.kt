@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.android.tools.screenshot.PreviewTest
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.ThemeSetting
@@ -33,7 +34,9 @@ class SettingsScreenshots {
             theme = ThemeSetting.DEFAULT,
             color = ColorSetting.MothPurple,
             font = FontSetting.DEFAULT,
-            onFontChange = {}
+            onFontChange = {},
+            accountsLayout = AccountsLayoutSetting.DEFAULT,
+            onAccountsLayoutChange = {}
         )
     }
 
@@ -59,7 +62,9 @@ class SettingsScreenshots {
             theme = ThemeSetting.DEFAULT,
             color = ColorSetting.MothPurple,
             font = FontSetting.DEFAULT,
-            onFontChange = {}
+            onFontChange = {},
+            accountsLayout = AccountsLayoutSetting.DEFAULT,
+            onAccountsLayoutChange = {}
         )
     }
 
@@ -85,7 +90,9 @@ class SettingsScreenshots {
             theme = ThemeSetting.DEFAULT,
             color = ColorSetting.MothPurple,
             font = FontSetting.DEFAULT,
-            onFontChange = {}
+            onFontChange = {},
+            accountsLayout = AccountsLayoutSetting.DEFAULT,
+            onAccountsLayoutChange = {}
         )
     }
 
@@ -111,7 +118,9 @@ class SettingsScreenshots {
             theme = ThemeSetting.DEFAULT,
             color = ColorSetting.MothPurple,
             font = FontSetting.DEFAULT,
-            onFontChange = {}
+            onFontChange = {},
+            accountsLayout = AccountsLayoutSetting.DEFAULT,
+            onAccountsLayoutChange = {}
         )
     }
 }

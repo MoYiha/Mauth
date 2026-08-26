@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.ColorSetting
 import com.xinto.mauth.core.settings.model.FontSetting
 import com.xinto.mauth.core.settings.model.SortSetting
@@ -34,6 +35,7 @@ class DefaultSettings(context: Context) : Settings {
     private val useBiometrics = preferenceStateFlow { it[KEY_USE_BIOMETRICS] ?: false }
     private val useMeshGradientBackground = preferenceStateFlow { it[KEY_USE_MESH_GRADIENT_BACKGROUND] ?: false }
     private val sortMode = preferenceStateFlow { it[KEY_SORT_MODE].toEnumOr(SortSetting.DEFAULT) }
+    private val accountsLayout = preferenceStateFlow { it[KEY_ACCOUNTS_LAYOUT].toEnumOr(AccountsLayoutSetting.DEFAULT) }
     private val theme = preferenceStateFlow { it[KEY_THEME].toEnumOr(ThemeSetting.DEFAULT) }
     private val color = preferenceStateFlow { it[KEY_COLOR].toEnumOr(ColorSetting.DEFAULT) }
     private val font = preferenceStateFlow { it[KEY_FONT].toEnumOr(FontSetting.DEFAULT) }
@@ -43,6 +45,7 @@ class DefaultSettings(context: Context) : Settings {
     override fun getUseBiometrics(): StateFlow<Boolean> = useBiometrics
     override fun getUseMeshGradientBackground(): StateFlow<Boolean> = useMeshGradientBackground
     override fun getSortMode(): StateFlow<SortSetting> = sortMode
+    override fun getAccountsLayout(): StateFlow<AccountsLayoutSetting> = accountsLayout
     override fun getTheme(): StateFlow<ThemeSetting> = theme
     override fun getColor(): StateFlow<ColorSetting> = color
     override fun getFont(): StateFlow<FontSetting> = font
@@ -74,6 +77,12 @@ class DefaultSettings(context: Context) : Settings {
     override suspend fun setSortMode(value: SortSetting) {
         preferences.edit {
             it[KEY_SORT_MODE] = value.name
+        }
+    }
+
+    override suspend fun setAccountsLayout(value: AccountsLayoutSetting) {
+        preferences.edit {
+            it[KEY_ACCOUNTS_LAYOUT] = value.name
         }
     }
 
@@ -115,6 +124,7 @@ class DefaultSettings(context: Context) : Settings {
         val KEY_USE_BIOMETRICS = booleanPreferencesKey("use_biometrics")
         val KEY_USE_MESH_GRADIENT_BACKGROUND = booleanPreferencesKey("use_mesh_gradient_background")
         val KEY_SORT_MODE = stringPreferencesKey("sort_mode")
+        val KEY_ACCOUNTS_LAYOUT = stringPreferencesKey("accounts_layout")
         val KEY_THEME = stringPreferencesKey("theme")
         val KEY_COLOR = stringPreferencesKey("color")
         val KEY_FONT = stringPreferencesKey("font")
