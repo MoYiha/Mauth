@@ -154,6 +154,7 @@ fun HomeScreen(
     val searchAccounts by viewModel.searchAccounts.collectAsStateWithLifecycle()
     val accountCounts by viewModel.accountCounts.collectAsStateWithLifecycle()
     val accountsLayout by viewModel.accountsLayout.collectAsStateWithLifecycle()
+    val showCodesByDefault by viewModel.showCodesByDefault.collectAsStateWithLifecycle()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         viewModel.getAccountInfoFromQrUri(uri)?.let {
@@ -252,6 +253,7 @@ fun HomeScreen(
         searchAccounts = searchAccounts,
         accountCounts = accountCounts,
         accountsLayout = accountsLayout,
+        showCodesByDefault = showCodesByDefault,
         showScanButton = hasCamera,
     )
 }
@@ -281,6 +283,7 @@ fun HomeScreen(
     searchAccounts: ImmutableList<DomainAccount>,
     accountCounts: DomainAccountCounts,
     accountsLayout: AccountsLayoutSetting,
+    showCodesByDefault: Boolean,
     modifier: Modifier = Modifier,
     showScanButton: Boolean
 ) {
@@ -446,6 +449,7 @@ fun HomeScreen(
                                 onAccountEdit = onAccountEdit,
                                 onAccountCounterIncrease = onAccountCounterIncrease,
                                 onAccountCopyCode = onAccountCopyCode,
+                                showCodesByDefault = showCodesByDefault,
                             )
                         }
                         AccountsLayoutSetting.Compact -> {
@@ -458,6 +462,7 @@ fun HomeScreen(
                                 onAccountEdit = onAccountEdit,
                                 onAccountCounterIncrease = onAccountCounterIncrease,
                                 onAccountCopyCode = onAccountCopyCode,
+                                showCodesByDefault = showCodesByDefault,
                             )
                         }
                     }
@@ -489,6 +494,7 @@ fun HomeScreen(
             selectedAccounts = selectedAccounts,
             accountRealtimeData = accountRealtimeData,
             accountsLayout = accountsLayout,
+            showCodesByDefault = showCodesByDefault,
         )
     }
     if (isExpandedWidth) {
@@ -703,6 +709,7 @@ private fun ColumnScope.SearchResults(
     selectedAccounts: SnapshotStateList<UUID>,
     accountRealtimeData: SnapshotStateMap<UUID, DomainOtpRealtimeData>,
     accountsLayout: AccountsLayoutSetting,
+    showCodesByDefault: Boolean,
 ) {
     val query = searchTextFieldState.text.toString().trim()
     val filteredAccounts = remember(searchAccounts, query) {
@@ -724,6 +731,7 @@ private fun ColumnScope.SearchResults(
                     onAccountEdit = onAccountEdit,
                     onAccountCounterIncrease = onAccountCounterIncrease,
                     onAccountCopyCode = onAccountCopyCode,
+                    showCodesByDefault = showCodesByDefault,
                     contentPadding = PaddingValues(16.dp),
                     selectionEnabled = false,
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
@@ -739,6 +747,7 @@ private fun ColumnScope.SearchResults(
                     onAccountEdit = onAccountEdit,
                     onAccountCounterIncrease = onAccountCounterIncrease,
                     onAccountCopyCode = onAccountCopyCode,
+                    showCodesByDefault = showCodesByDefault,
                     contentPadding = PaddingValues(vertical = 8.dp),
                     selectionEnabled = false,
                 )
@@ -1171,6 +1180,7 @@ private fun HomeScreen_Loading_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1206,6 +1216,7 @@ private fun HomeScreen_Empty_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1267,6 +1278,7 @@ private fun HomeScreen_Success_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1328,6 +1340,7 @@ private fun HomeScreen_Compact_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.Compact,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1389,6 +1402,7 @@ private fun HomeScreen_Selection_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1463,6 +1477,7 @@ private fun HomeScreen_Groups_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewGroupedAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )
@@ -1498,6 +1513,7 @@ private fun HomeScreen_Error_Preview() {
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
+                showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
             )

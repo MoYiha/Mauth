@@ -71,6 +71,7 @@ fun AccountCardGrid(
     onAccountEdit: (UUID) -> Unit,
     onAccountCounterIncrease: (UUID) -> Unit,
     onAccountCopyCode: (String, String, Boolean) -> Unit,
+    showCodesByDefault: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 88.dp),
     selectionEnabled: Boolean = true,
@@ -105,6 +106,7 @@ fun AccountCardGrid(
                     realtimeData = realtimeData,
                     selected = selectedAccounts.contains(account.id),
                     selectionActive = selectedAccounts.isNotEmpty(),
+                    showCodesByDefault = showCodesByDefault,
                     colors = colors,
                     elevation = elevation
                 )
@@ -127,11 +129,12 @@ private fun Account(
     realtimeData: DomainOtpRealtimeData,
     selected: Boolean,
     selectionActive: Boolean,
+    showCodesByDefault: Boolean,
     colors: CardColors = CardDefaults.cardColors(),
     elevation: CardElevation = CardDefaults.cardElevation(),
     border: BorderStroke? = null,
 ) {
-    var showCode by remember { mutableStateOf(false) }
+    var showCode by remember(showCodesByDefault) { mutableStateOf(showCodesByDefault) }
     TwoPaneCard(
         onClick = onClick,
         onLongClick = onLongClick,

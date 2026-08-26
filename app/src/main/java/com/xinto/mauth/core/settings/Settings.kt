@@ -12,6 +12,7 @@ interface Settings {
     fun getLockOnResume(): StateFlow<Boolean>
     fun getUseBiometrics(): StateFlow<Boolean>
     fun getUseMeshGradientBackground(): StateFlow<Boolean>
+    fun getShowCodesByDefault(): StateFlow<Boolean>
     fun getSortMode(): StateFlow<SortSetting>
     fun getAccountsLayout(): StateFlow<AccountsLayoutSetting>
     fun getTheme(): StateFlow<ThemeSetting>
@@ -22,6 +23,7 @@ interface Settings {
     suspend fun setLockOnResume(value: Boolean)
     suspend fun setUseBiometrics(value: Boolean)
     suspend fun setUseMeshGradientBackground(value: Boolean)
+    suspend fun setShowCodesByDefault(value: Boolean)
     suspend fun setSortMode(value: SortSetting)
     suspend fun setAccountsLayout(value: AccountsLayoutSetting)
     suspend fun setTheme(value: ThemeSetting)

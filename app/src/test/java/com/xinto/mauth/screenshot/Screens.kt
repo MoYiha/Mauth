@@ -100,6 +100,7 @@ private fun HomeAccountsFixture(
         searchAccounts = persistentListOf(),
         accountCounts = accountCounts,
         accountsLayout = AccountsLayoutSetting.DEFAULT,
+        showCodesByDefault = false,
         modifier = Modifier.fillMaxSize(),
         showScanButton = false
     )
@@ -145,6 +146,8 @@ private fun SettingsFixture() {
         onFontChange = {},
         accountsLayout = AccountsLayoutSetting.DEFAULT,
         onAccountsLayoutChange = {},
+        showCodesByDefault = false,
+        onShowCodesByDefaultChange = {},
         modifier = Modifier.fillMaxSize(),
     )
 }

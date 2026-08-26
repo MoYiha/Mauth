@@ -77,6 +77,7 @@ fun AccountCompactGrid(
     onAccountEdit: (UUID) -> Unit,
     onAccountCounterIncrease: (UUID) -> Unit,
     onAccountCopyCode: (String, String, Boolean) -> Unit,
+    showCodesByDefault: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(top = 8.dp, bottom = 88.dp),
     selectionEnabled: Boolean = true,
@@ -98,6 +99,7 @@ fun AccountCompactGrid(
                     realtimeData = realtimeData,
                     selected = selectedAccounts.contains(account.id),
                     selectionActive = selectedAccounts.isNotEmpty(),
+                    showCodesByDefault = showCodesByDefault,
                     selectionEnabled = selectionEnabled,
                 )
             }
@@ -118,10 +120,11 @@ private fun Account(
     realtimeData: DomainOtpRealtimeData,
     selected: Boolean,
     selectionActive: Boolean,
+    showCodesByDefault: Boolean,
     modifier: Modifier = Modifier,
     selectionEnabled: Boolean = true,
 ) {
-    var showCode by remember { mutableStateOf(false) }
+    var showCode by remember(showCodesByDefault) { mutableStateOf(showCodesByDefault) }
     val urgent = realtimeData is DomainOtpRealtimeData.Totp && realtimeData.countdown <= 5
     val codeColor by animateColorAsState(
         targetValue = if (urgent) MaterialTheme.colorScheme.error else LocalContentColor.current,

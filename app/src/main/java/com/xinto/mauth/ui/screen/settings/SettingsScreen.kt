@@ -65,6 +65,7 @@ fun SettingsScreen(
     val color by viewModel.color.collectAsStateWithLifecycle()
     val meshGradientBackground by viewModel.meshGradientBackground.collectAsStateWithLifecycle()
     val accountsLayout by viewModel.accountsLayout.collectAsStateWithLifecycle()
+    val showCodesByDefault by viewModel.showCodesByDefault.collectAsStateWithLifecycle()
 
     val biometricHandler = rememberBiometricHandler(
         onAuthSuccess = viewModel::toggleBiometrics
@@ -107,7 +108,9 @@ fun SettingsScreen(
         font = font,
         onFontChange = viewModel::updateFont,
         accountsLayout = accountsLayout,
-        onAccountsLayoutChange = viewModel::updateAccountsLayout
+        onAccountsLayoutChange = viewModel::updateAccountsLayout,
+        showCodesByDefault = showCodesByDefault,
+        onShowCodesByDefaultChange = viewModel::updateShowCodesByDefault
     )
 }
 
@@ -133,6 +136,8 @@ fun SettingsScreen(
     onFontChange: (FontSetting) -> Unit,
     accountsLayout: AccountsLayoutSetting,
     onAccountsLayoutChange: (AccountsLayoutSetting) -> Unit,
+    showCodesByDefault: Boolean,
+    onShowCodesByDefaultChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -170,7 +175,7 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             SettingsGroup(header = { Text(stringResource(R.string.settings_category_security)) }) {
-                val count = if (showBiometrics) 4 else 3
+                val count = if (showBiometrics) 5 else 4
                 SettingsSwitchItem(
                     onCheckedChange = onSecureModeChange,
                     checked = secureMode,
@@ -185,6 +190,18 @@ fun SettingsScreen(
                     shapes = ListItemDefaults.segmentedShapes(index = 0, count = count)
                 )
                 SettingsSwitchItem(
+                    onCheckedChange = onShowCodesByDefaultChange,
+                    checked = showCodesByDefault,
+                    title = { Text(stringResource(R.string.settings_prefs_showcodes)) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_visibility),
+                            contentDescription = null
+                        )
+                    },
+                    shapes = ListItemDefaults.segmentedShapes(index = 1, count = count)
+                )
+                SettingsSwitchItem(
                     onCheckedChange = onPinCodeChange,
                     checked = pinCode,
                     title = { Text(stringResource(R.string.settings_prefs_pincode)) },
@@ -195,7 +212,7 @@ fun SettingsScreen(
                             contentDescription = null
                         )
                     },
-                    shapes = ListItemDefaults.segmentedShapes(index = 1, count = count)
+                    shapes = ListItemDefaults.segmentedShapes(index = 2, count = count)
                 )
                 if (showBiometrics) {
                     SettingsSwitchItem(
@@ -209,7 +226,7 @@ fun SettingsScreen(
                             )
                         },
                         enabled = pinCode,
-                        shapes = ListItemDefaults.segmentedShapes(index = 2, count = count)
+                        shapes = ListItemDefaults.segmentedShapes(index = 3, count = count)
                     )
                 }
                 SettingsSwitchItem(
@@ -224,7 +241,7 @@ fun SettingsScreen(
                         )
                     },
                     enabled = pinCode,
-                    shapes = ListItemDefaults.segmentedShapes(index = if (showBiometrics) 3 else 2, count = count)
+                    shapes = ListItemDefaults.segmentedShapes(index = if (showBiometrics) 4 else 3, count = count)
                 )
             }
             SettingsGroup(header = { Text(stringResource(R.string.settings_category_appearance)) }) {
@@ -333,7 +350,9 @@ private fun SettingsScreen_Default_Preview() {
                 font = FontSetting.DEFAULT,
                 onFontChange = {},
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
-                onAccountsLayoutChange = {}
+                onAccountsLayoutChange = {},
+                showCodesByDefault = false,
+                onShowCodesByDefaultChange = {}
             )
         }
     }
@@ -364,7 +383,9 @@ private fun SettingsScreen_AllEnabled_Preview() {
                 font = FontSetting.DEFAULT,
                 onFontChange = {},
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
-                onAccountsLayoutChange = {}
+                onAccountsLayoutChange = {},
+                showCodesByDefault = true,
+                onShowCodesByDefaultChange = {}
             )
         }
     }

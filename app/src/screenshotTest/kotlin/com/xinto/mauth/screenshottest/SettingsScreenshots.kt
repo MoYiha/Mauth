@@ -36,7 +36,9 @@ class SettingsScreenshots {
             font = FontSetting.DEFAULT,
             onFontChange = {},
             accountsLayout = AccountsLayoutSetting.DEFAULT,
-            onAccountsLayoutChange = {}
+            onAccountsLayoutChange = {},
+            showCodesByDefault = false,
+            onShowCodesByDefaultChange = {}
         )
     }
 
@@ -64,7 +66,9 @@ class SettingsScreenshots {
             font = FontSetting.DEFAULT,
             onFontChange = {},
             accountsLayout = AccountsLayoutSetting.DEFAULT,
-            onAccountsLayoutChange = {}
+            onAccountsLayoutChange = {},
+            showCodesByDefault = false,
+            onShowCodesByDefaultChange = {}
         )
     }
 
@@ -92,7 +96,9 @@ class SettingsScreenshots {
             font = FontSetting.DEFAULT,
             onFontChange = {},
             accountsLayout = AccountsLayoutSetting.DEFAULT,
-            onAccountsLayoutChange = {}
+            onAccountsLayoutChange = {},
+            showCodesByDefault = true,
+            onShowCodesByDefaultChange = {}
         )
     }
 
@@ -120,7 +126,9 @@ class SettingsScreenshots {
             font = FontSetting.DEFAULT,
             onFontChange = {},
             accountsLayout = AccountsLayoutSetting.DEFAULT,
-            onAccountsLayoutChange = {}
+            onAccountsLayoutChange = {},
+            showCodesByDefault = false,
+            onShowCodesByDefaultChange = {}
         )
     }
 }

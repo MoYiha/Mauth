@@ -116,6 +116,7 @@ class HomeViewModel(
     val activeSortSetting = settings.getSortMode()
 
     val accountsLayout = settings.getAccountsLayout()
+    val showCodesByDefault = settings.getShowCodesByDefault()
 
     fun copyCodeToClipboard(label: String, code: String, visible: Boolean) {
         val application = getApplication<Mauth>()

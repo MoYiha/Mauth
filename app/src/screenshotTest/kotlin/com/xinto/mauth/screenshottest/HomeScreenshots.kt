@@ -46,6 +46,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = DomainAccountCounts.Empty,
             accountsLayout = AccountsLayoutSetting.Cards,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -78,6 +79,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -110,6 +112,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -142,6 +145,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.groupedAccountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -174,6 +178,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -206,6 +211,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )
@@ -238,6 +244,7 @@ class HomeScreenshots {
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.groupedAccountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
+            showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
         )

@@ -101,6 +101,7 @@
     <string name="settings_prefs_securemode_description">Prevent screenshots within the app</string>
     <string name="settings_prefs_pincode">PIN Lock</string>
     <string name="settings_prefs_pincode_description">Require authentication on startup</string>
+    <string name="settings_prefs_showcodes">Show codes by default</string>
     <string name="settings_prefs_animatedbackground">Animated background</string>
     <string name="settings_prefs_animatedbackground_description">Show a slowly drifting gradient behind the PIN screen</string>
     <string name="settings_prefs_autolock">Auto-lock</string>

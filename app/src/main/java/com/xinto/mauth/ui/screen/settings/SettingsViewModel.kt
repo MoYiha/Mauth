@@ -23,6 +23,7 @@ class SettingsViewModel(
     val color = settings.getColor()
     val meshGradientBackground = settings.getUseMeshGradientBackground()
     val accountsLayout = settings.getAccountsLayout()
+    val showCodesByDefault = settings.getShowCodesByDefault()
 
     val pinLock = authRepository.observeIsProtected()
         .stateIn(
@@ -58,6 +59,12 @@ class SettingsViewModel(
     fun updateAccountsLayout(newLayout: AccountsLayoutSetting) {
         viewModelScope.launch {
             settings.setAccountsLayout(newLayout)
+        }
+    }
+
+    fun updateShowCodesByDefault(value: Boolean) {
+        viewModelScope.launch {
+            settings.setShowCodesByDefault(value)
         }
     }
 
