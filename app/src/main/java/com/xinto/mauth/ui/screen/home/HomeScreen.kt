@@ -868,12 +868,7 @@ private fun GroupFilterRow(
             FilterChip(
                 selected = selected,
                 onClick = { onActiveGroupChange(GroupFilter.All) },
-                label = {
-                    GroupChipLabel(
-                        text = stringResource(R.string.home_groups_all),
-                        count = accountCounts[GroupFilter.All],
-                    )
-                },
+                label = { Text(stringResource(R.string.home_groups_all)) },
                 leadingIcon = if (!selected) null else { ->
                     Icon(
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
