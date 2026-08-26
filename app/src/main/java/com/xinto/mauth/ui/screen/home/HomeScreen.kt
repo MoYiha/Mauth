@@ -883,25 +883,27 @@ private fun GroupFilterRow(
                 }
             )
         }
-        item(key = "ungrouped", contentType = 0) {
-            val selected = activeGroup is GroupFilter.Ungrouped
-            FilterChip(
-                selected = selected,
-                onClick = { onActiveGroupChange(GroupFilter.Ungrouped) },
-                label = {
-                    GroupChipLabel(
-                        text = stringResource(R.string.home_groups_ungrouped),
-                        count = accountCounts[GroupFilter.Ungrouped],
-                    )
-                },
-                leadingIcon = if (!selected) null else { ->
-                    Icon(
-                        modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        painter = painterResource(R.drawable.ic_check),
-                        contentDescription = null
-                    )
-                }
-            )
+        val ungroupedSelected = activeGroup is GroupFilter.Ungrouped
+        if (accountCounts.ungrouped > 0 || ungroupedSelected) {
+            item(key = "ungrouped", contentType = 0) {
+                FilterChip(
+                    selected = ungroupedSelected,
+                    onClick = { onActiveGroupChange(GroupFilter.Ungrouped) },
+                    label = {
+                        GroupChipLabel(
+                            text = stringResource(R.string.home_groups_ungrouped),
+                            count = accountCounts[GroupFilter.Ungrouped],
+                        )
+                    },
+                    leadingIcon = if (!ungroupedSelected) null else { ->
+                        Icon(
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                            painter = painterResource(R.drawable.ic_check),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
         }
         item(key = "divider", contentType = 1) {
             VerticalDivider(modifier = Modifier.height(24.dp))
