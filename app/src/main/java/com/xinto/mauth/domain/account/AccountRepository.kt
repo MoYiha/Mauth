@@ -10,6 +10,7 @@ import com.xinto.mauth.db.dao.rtdata.RtdataDao
 import com.xinto.mauth.db.dao.rtdata.entity.EntityCountData
 import com.xinto.mauth.domain.SettingsRepository
 import com.xinto.mauth.domain.account.model.DomainAccount
+import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
 import com.xinto.mauth.domain.account.model.DomainExportAccount
 import com.xinto.mauth.domain.group.model.GroupFilter
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class AccountRepository(
@@ -37,6 +39,21 @@ class AccountRepository(
                 .map { it.toDomain() }
                 .sortedFor(sort)
         }.flowOn(Dispatchers.IO)
+    }
+
+    fun getAccountCounts(): Flow<DomainAccountCounts> {
+        return accountsDao.observeAll()
+            .map { accounts ->
+                DomainAccountCounts(
+                    total = accounts.size,
+                    ungrouped = accounts.count { it.groupId == null },
+                    byGroup = accounts
+                        .mapNotNull { it.groupId }
+                        .groupingBy { it }
+                        .eachCount()
+                )
+            }
+            .flowOn(Dispatchers.IO)
     }
 
     fun getGroupedAccounts(): Flow<Map<UUID?, List<DomainAccount>>> {

@@ -55,6 +55,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.ModalBottomSheet
@@ -113,6 +114,7 @@ import com.xinto.mauth.core.otp.model.OtpDigest
 import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
 import com.xinto.mauth.core.settings.model.SortSetting
 import com.xinto.mauth.domain.account.model.DomainAccount
+import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
 import com.xinto.mauth.domain.group.model.DomainGroup
 import com.xinto.mauth.domain.group.model.GroupFilter
@@ -124,6 +126,7 @@ import com.xinto.mauth.ui.util.collectAsStateListWithLifecycle
 import com.xinto.mauth.ui.util.collectAsStateMapWithLifecycle
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -149,6 +152,7 @@ fun HomeScreen(
     val groups by viewModel.groups.collectAsStateWithLifecycle()
     val activeGroup by viewModel.activeGroup.collectAsStateWithLifecycle()
     val searchAccounts by viewModel.searchAccounts.collectAsStateWithLifecycle()
+    val accountCounts by viewModel.accountCounts.collectAsStateWithLifecycle()
     val accountsLayout by viewModel.accountsLayout.collectAsStateWithLifecycle()
 
     val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -246,6 +250,7 @@ fun HomeScreen(
             }
         },
         searchAccounts = searchAccounts,
+        accountCounts = accountCounts,
         accountsLayout = accountsLayout,
         showScanButton = hasCamera,
     )
@@ -274,6 +279,7 @@ fun HomeScreen(
     onCreateGroupClick: () -> Unit,
     onGroupSelectedClick: () -> Unit,
     searchAccounts: ImmutableList<DomainAccount>,
+    accountCounts: DomainAccountCounts,
     accountsLayout: AccountsLayoutSetting,
     modifier: Modifier = Modifier,
     showScanButton: Boolean
@@ -299,6 +305,7 @@ fun HomeScreen(
         SearchInputField(
             searchBarState = searchBarState,
             textFieldState = searchTextFieldState,
+            accountCount = accountCounts.total,
             inlineActions = if (isExpandedWidth) null else { -> Row { topBarActions() } }
         )
     }
@@ -384,6 +391,7 @@ fun HomeScreen(
                         modifier = Modifier.padding(top = 8.dp),
                         groups = groups,
                         activeGroup = activeGroup,
+                        accountCounts = accountCounts,
                         onActiveGroupChange = onActiveGroupChange,
                         onAddGroup = onCreateGroupClick,
                     )
@@ -513,6 +521,7 @@ fun HomeScreen(
 private fun SearchInputField(
     searchBarState: SearchBarState,
     textFieldState: TextFieldState,
+    accountCount: Int,
     inlineActions: (@Composable () -> Unit)? = null,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -522,7 +531,13 @@ private fun SearchInputField(
         textFieldState = textFieldState,
         searchBarState = searchBarState,
         onSearch = { keyboardController?.hide() },
-        placeholder = { Text(stringResource(R.string.home_search_placeholder)) },
+        placeholder = {
+            if (accountCount > 0) {
+                Text(pluralStringResource(R.plurals.home_search_placeholder, accountCount, accountCount))
+            } else {
+                Text(stringResource(R.string.home_search_placeholder_empty))
+            }
+        },
         leadingIcon = {
             if (expanded) {
                 IconButton(onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } }) {
@@ -818,11 +833,26 @@ private fun SelectionTopBar(
 }
 
 
+@Composable
+private fun GroupChipLabel(text: String, count: Int) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(text)
+        Text(
+            text = count.toString(),
+            color = LocalContentColor.current.copy(alpha = 0.7f),
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GroupFilterRow(
     groups: ImmutableList<DomainGroup>,
     activeGroup: GroupFilter,
+    accountCounts: DomainAccountCounts,
     onActiveGroupChange: (GroupFilter) -> Unit,
     onAddGroup: () -> Unit,
     modifier: Modifier = Modifier,
@@ -838,7 +868,12 @@ private fun GroupFilterRow(
             FilterChip(
                 selected = selected,
                 onClick = { onActiveGroupChange(GroupFilter.All) },
-                label = { Text(stringResource(R.string.home_groups_all)) },
+                label = {
+                    GroupChipLabel(
+                        text = stringResource(R.string.home_groups_all),
+                        count = accountCounts[GroupFilter.All],
+                    )
+                },
                 leadingIcon = if (!selected) null else { ->
                     Icon(
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
@@ -853,7 +888,12 @@ private fun GroupFilterRow(
             FilterChip(
                 selected = selected,
                 onClick = { onActiveGroupChange(GroupFilter.Ungrouped) },
-                label = { Text(stringResource(R.string.home_groups_ungrouped)) },
+                label = {
+                    GroupChipLabel(
+                        text = stringResource(R.string.home_groups_ungrouped),
+                        count = accountCounts[GroupFilter.Ungrouped],
+                    )
+                },
                 leadingIcon = if (!selected) null else { ->
                     Icon(
                         modifier = Modifier.size(FilterChipDefaults.IconSize),
@@ -872,7 +912,12 @@ private fun GroupFilterRow(
             FilterChip(
                 selected = selected,
                 onClick = { onActiveGroupChange(GroupFilter.Specific(group.id)) },
-                label = { Text(group.name) },
+                label = {
+                    GroupChipLabel(
+                        text = group.name,
+                        count = accountCounts.byGroup[group.id] ?: 0,
+                    )
+                },
                 leadingIcon = when {
                     selected -> { ->
                         Icon(
@@ -1086,6 +1131,21 @@ private fun DeleteDialog(
     )
 }
 
+private val PreviewAccountCounts = DomainAccountCounts(
+    total = 2,
+    ungrouped = 2,
+    byGroup = persistentMapOf()
+)
+
+private val PreviewGroupedAccountCounts = DomainAccountCounts(
+    total = 2,
+    ungrouped = 0,
+    byGroup = persistentMapOf(
+        UUID.fromString("00000000-0000-0000-0000-0000000000a1") to 1,
+        UUID.fromString("00000000-0000-0000-0000-0000000000a2") to 1
+    )
+)
+
 @Composable
 @PreviewAllConfigurations
 private fun HomeScreen_Loading_Preview() {
@@ -1112,6 +1172,7 @@ private fun HomeScreen_Loading_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1146,6 +1207,7 @@ private fun HomeScreen_Empty_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1206,6 +1268,7 @@ private fun HomeScreen_Success_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1266,6 +1329,7 @@ private fun HomeScreen_Compact_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.Compact,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1326,6 +1390,7 @@ private fun HomeScreen_Selection_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = PreviewAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1399,6 +1464,7 @@ private fun HomeScreen_Groups_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = PreviewGroupedAccountCounts,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1433,6 +1499,7 @@ private fun HomeScreen_Error_Preview() {
                 onCreateGroupClick = {},
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
+                accountCounts = DomainAccountCounts.Empty,
                 accountsLayout = AccountsLayoutSetting.DEFAULT,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false

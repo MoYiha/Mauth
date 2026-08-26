@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.android.tools.screenshot.PreviewTest
 import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
+import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.core.settings.model.SortSetting
 import com.xinto.mauth.domain.group.model.GroupFilter
 import com.xinto.mauth.domain.otp.model.DomainOtpRealtimeData
@@ -43,6 +44,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = DomainAccountCounts.Empty,
             accountsLayout = AccountsLayoutSetting.Cards,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -74,6 +76,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -105,6 +108,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -136,6 +140,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.groupedAccountCounts,
             accountsLayout = AccountsLayoutSetting.Cards,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -167,6 +172,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -198,6 +204,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.accountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -229,6 +236,7 @@ class HomeScreenshots {
             onCreateGroupClick = {},
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
+            accountCounts = PreviewFixtures.groupedAccountCounts,
             accountsLayout = AccountsLayoutSetting.Compact,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false

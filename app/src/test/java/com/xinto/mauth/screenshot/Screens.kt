@@ -18,6 +18,7 @@ import com.xinto.mauth.ui.screen.about.AboutScreen
 import com.xinto.mauth.ui.screen.home.HomeScreen
 import com.xinto.mauth.ui.screen.home.HomeScreenState
 import com.xinto.mauth.ui.screen.settings.SettingsScreen
+import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.group.model.DomainGroup
 import com.xinto.mauth.domain.group.model.GroupFilter
 import kotlinx.collections.immutable.ImmutableList
@@ -47,7 +48,7 @@ fun StoreScreenshotContent(id: String) {
     when (id) {
         "auth_pin" -> AuthPinFixture()
         "account_add" -> AccountAddFixture()
-        "home_accounts" -> HomeAccountsFixture(selected = emptyList(), groups = StoreFixtures.groups)
+        "home_accounts" -> HomeAccountsFixture(selected = emptyList(), groups = StoreFixtures.groups, accountCounts = StoreFixtures.groupedAccountCounts)
         "home_selection" -> HomeAccountsFixture(selected = listOf(StoreFixtures.discordAccount.id, StoreFixtures.hotpAccount.id))
         "settings" -> SettingsFixture()
         "about" -> AboutFixture()
@@ -74,6 +75,7 @@ private fun AuthPinFixture() {
 private fun HomeAccountsFixture(
     selected: List<UUID>,
     groups: ImmutableList<DomainGroup> = persistentListOf(),
+    accountCounts: DomainAccountCounts = StoreFixtures.sampleAccountCounts,
 ) {
     HomeScreen(
         onAddAccountNavigate = {},
@@ -96,6 +98,7 @@ private fun HomeAccountsFixture(
         onCreateGroupClick = {},
         onGroupSelectedClick = {},
         searchAccounts = persistentListOf(),
+        accountCounts = accountCounts,
         accountsLayout = AccountsLayoutSetting.DEFAULT,
         modifier = Modifier.fillMaxSize(),
         showScanButton = false

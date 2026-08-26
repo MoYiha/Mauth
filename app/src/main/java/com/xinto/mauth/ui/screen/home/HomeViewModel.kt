@@ -20,6 +20,7 @@ import com.xinto.mauth.core.settings.Settings
 import com.xinto.mauth.core.settings.model.SortSetting
 import com.xinto.mauth.domain.QrRepository
 import com.xinto.mauth.domain.account.AccountRepository
+import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
 import com.xinto.mauth.domain.group.GroupRepository
 import com.xinto.mauth.domain.group.model.GroupFilter
@@ -73,6 +74,13 @@ class HomeViewModel(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = persistentListOf()
+        )
+
+    val accountCounts = accounts.getAccountCounts()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DomainAccountCounts.Empty
         )
 
     val groups = groupRepository.getGroups()
