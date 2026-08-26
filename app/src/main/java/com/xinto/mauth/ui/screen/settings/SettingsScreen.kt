@@ -42,6 +42,7 @@ import com.xinto.mauth.ui.component.rememberBiometricHandler
 import com.xinto.mauth.ui.component.rememberBiometricPromptData
 import com.xinto.mauth.ui.preview.PreviewAllConfigurations
 import com.xinto.mauth.ui.screen.settings.component.SettingsGroup
+import com.xinto.mauth.ui.screen.settings.component.SettingsItem
 import com.xinto.mauth.ui.screen.settings.component.SettingsNavigateItem
 import com.xinto.mauth.ui.screen.settings.component.SettingsSwitchItem
 import com.xinto.mauth.ui.theme.MauthTheme
@@ -260,7 +261,7 @@ fun SettingsScreen(
                     },
                     shapes = ListItemDefaults.segmentedShapes(index = 0, count = count)
                 )
-                SettingsNavigateItem(
+                SettingsItem(
                     onClick = { fontDialogIsOpen = true },
                     title = { Text(stringResource(R.string.settings_prefs_font)) },
                     description = { Text(stringResource(font.labelRes)) },
@@ -272,7 +273,7 @@ fun SettingsScreen(
                     },
                     shapes = ListItemDefaults.segmentedShapes(index = 1, count = count)
                 )
-                SettingsNavigateItem(
+                SettingsItem(
                     onClick = { accountsLayoutDialogIsOpen = true },
                     title = { Text(stringResource(R.string.settings_prefs_accountslayout)) },
                     description = { Text(stringResource(accountsLayout.labelRes)) },
