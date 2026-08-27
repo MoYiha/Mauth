@@ -36,7 +36,6 @@ class PinSetupViewModel(
             val expected = initialCode ?: return
             if (expected != _code.value) {
                 _error.value = true
-                clear()
                 return
             }
 
@@ -68,15 +67,27 @@ class PinSetupViewModel(
     }
 
     fun addNumber(number: Char) {
+        val retrying = _error.value
         _error.value = false
-        _code.update { it + number }
+        _code.update {
+            if (retrying) {
+                number.toString()
+            } else {
+                it + number
+            }
+        }
     }
 
     fun deleteLast() {
+        if (_error.value) {
+            clear()
+            return
+        }
         _code.update { it.dropLast(1) }
     }
 
     fun clear() {
+        _error.value = false
         _code.value = ""
     }
 

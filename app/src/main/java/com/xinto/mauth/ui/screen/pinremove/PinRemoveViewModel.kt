@@ -32,7 +32,7 @@ class PinRemoveViewModel(
                 authRepository.removeCode()
                 _finished.value = true
             } else {
-                _state.value = PinRemoveScreenState.Error
+                _state.value = PinRemoveScreenState.Error(current.code)
             }
         }
     }
@@ -48,9 +48,10 @@ class PinRemoveViewModel(
 
     fun deleteLast() {
         _state.update {
-            if (it is PinRemoveScreenState.Stale) {
-                PinRemoveScreenState.Stale(it.code.dropLast(1))
-            } else it
+            when (it) {
+                is PinRemoveScreenState.Stale -> PinRemoveScreenState.Stale(it.code.dropLast(1))
+                is PinRemoveScreenState.Error -> PinRemoveScreenState.Stale("")
+            }
         }
     }
 

@@ -112,7 +112,7 @@ private fun PinRemoveScreen_Error_Preview() {
         Surface(color = MaterialTheme.colorScheme.background) {
             PinRemoveScreen(
                 modifier = Modifier.fillMaxSize(),
-                state = PinRemoveScreenState.Error,
+                state = PinRemoveScreenState.Error("123"),
                 onEnter = {},
                 onBack = {},
                 onNumberEnter = {},
