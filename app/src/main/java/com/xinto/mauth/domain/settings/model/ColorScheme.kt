@@ -1,8 +1,8 @@
-package com.xinto.mauth.core.settings.model
+package com.xinto.mauth.domain.settings.model
 
 import android.os.Build
 
-enum class ColorSetting {
+enum class ColorScheme {
     Dynamic,
     MothPurple,
     BlueberryBlue,

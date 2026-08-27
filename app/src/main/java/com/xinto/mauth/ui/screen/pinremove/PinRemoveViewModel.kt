@@ -2,7 +2,7 @@ package com.xinto.mauth.ui.screen.pinremove
 
 import androidx.lifecycle.ViewModel
 import com.xinto.mauth.domain.AuthRepository
-import com.xinto.mauth.domain.SettingsRepository
+import com.xinto.mauth.domain.settings.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.android.tools.screenshot.PreviewTest
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
+import com.xinto.mauth.domain.settings.model.AccountsLayout
 import com.xinto.mauth.domain.account.model.DomainAccountCounts
-import com.xinto.mauth.core.settings.model.SortSetting
+import com.xinto.mauth.domain.settings.model.AccountsSort
 import com.xinto.mauth.domain.group.model.GroupFilter
 import com.xinto.mauth.domain.otp.model.DomainOtpRealtimeData
 import com.xinto.mauth.ui.screen.home.HomeScreen
@@ -36,7 +36,7 @@ class HomeScreenshots {
             state = HomeScreenState.Empty,
             accountRealtimeData = remember { mutableStateMapOf<UUID, DomainOtpRealtimeData>() },
             selectedAccounts = remember { mutableStateListOf<UUID>() },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = persistentListOf(),
             activeGroup = GroupFilter.All,
@@ -45,7 +45,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = DomainAccountCounts.Empty,
-            accountsLayout = AccountsLayoutSetting.Cards,
+            accountsLayout = AccountsLayout.Cards,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -69,7 +69,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf<UUID>() },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = persistentListOf(),
             activeGroup = GroupFilter.All,
@@ -78,7 +78,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
-            accountsLayout = AccountsLayoutSetting.Cards,
+            accountsLayout = AccountsLayout.Cards,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -102,7 +102,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf(PreviewFixtures.github.id) },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = persistentListOf(),
             activeGroup = GroupFilter.All,
@@ -111,7 +111,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
-            accountsLayout = AccountsLayoutSetting.Cards,
+            accountsLayout = AccountsLayout.Cards,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -135,7 +135,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf<UUID>() },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = PreviewFixtures.groups,
             activeGroup = GroupFilter.All,
@@ -144,7 +144,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.groupedAccountCounts,
-            accountsLayout = AccountsLayoutSetting.Cards,
+            accountsLayout = AccountsLayout.Cards,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -168,7 +168,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf<UUID>() },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = persistentListOf(),
             activeGroup = GroupFilter.All,
@@ -177,7 +177,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
-            accountsLayout = AccountsLayoutSetting.Compact,
+            accountsLayout = AccountsLayout.Compact,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -201,7 +201,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf(PreviewFixtures.github.id) },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = persistentListOf(),
             activeGroup = GroupFilter.All,
@@ -210,7 +210,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.accountCounts,
-            accountsLayout = AccountsLayoutSetting.Compact,
+            accountsLayout = AccountsLayout.Compact,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false
@@ -234,7 +234,7 @@ class HomeScreenshots {
             state = HomeScreenState.Success(PreviewFixtures.accounts),
             accountRealtimeData = PreviewFixtures.rememberRealtimeData(),
             selectedAccounts = remember { mutableStateListOf<UUID>() },
-            activeSortSetting = SortSetting.DEFAULT,
+            activeAccountsSort = AccountsSort.DEFAULT,
             onActiveSortChange = {},
             groups = PreviewFixtures.groups,
             activeGroup = GroupFilter.All,
@@ -243,7 +243,7 @@ class HomeScreenshots {
             onGroupSelectedClick = {},
             searchAccounts = persistentListOf(),
             accountCounts = PreviewFixtures.groupedAccountCounts,
-            accountsLayout = AccountsLayoutSetting.Compact,
+            accountsLayout = AccountsLayout.Compact,
             showCodesByDefault = false,
             modifier = Modifier.fillMaxSize(),
             showScanButton = false

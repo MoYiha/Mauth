@@ -34,10 +34,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xinto.mauth.R
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
-import com.xinto.mauth.core.settings.model.ColorSetting
-import com.xinto.mauth.core.settings.model.FontSetting
-import com.xinto.mauth.core.settings.model.ThemeSetting
+import com.xinto.mauth.domain.settings.model.AccountsLayout
+import com.xinto.mauth.domain.settings.model.ColorScheme
+import com.xinto.mauth.domain.settings.model.Font
+import com.xinto.mauth.domain.settings.model.Theme
 import com.xinto.mauth.ui.component.rememberBiometricHandler
 import com.xinto.mauth.ui.component.rememberBiometricPromptData
 import com.xinto.mauth.ui.preview.PreviewAllConfigurations
@@ -131,12 +131,12 @@ fun SettingsScreen(
     biometrics: Boolean,
     onBiometricsChange: (Boolean) -> Unit,
     onThemeNavigate: () -> Unit,
-    theme: ThemeSetting,
-    color: ColorSetting,
-    font: FontSetting,
-    onFontChange: (FontSetting) -> Unit,
-    accountsLayout: AccountsLayoutSetting,
-    onAccountsLayoutChange: (AccountsLayoutSetting) -> Unit,
+    theme: Theme,
+    color: ColorScheme,
+    font: Font,
+    onFontChange: (Font) -> Unit,
+    accountsLayout: AccountsLayout,
+    onAccountsLayoutChange: (AccountsLayout) -> Unit,
     showCodesByDefault: Boolean,
     onShowCodesByDefaultChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -346,11 +346,11 @@ private fun SettingsScreen_Default_Preview() {
                 biometrics = false,
                 onBiometricsChange = {},
                 onThemeNavigate = {},
-                theme = ThemeSetting.DEFAULT,
-                color = ColorSetting.MothPurple,
-                font = FontSetting.DEFAULT,
+                theme = Theme.DEFAULT,
+                color = ColorScheme.MothPurple,
+                font = Font.DEFAULT,
                 onFontChange = {},
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 onAccountsLayoutChange = {},
                 showCodesByDefault = false,
                 onShowCodesByDefaultChange = {}
@@ -379,11 +379,11 @@ private fun SettingsScreen_AllEnabled_Preview() {
                 biometrics = true,
                 onBiometricsChange = {},
                 onThemeNavigate = {},
-                theme = ThemeSetting.DEFAULT,
-                color = ColorSetting.MothPurple,
-                font = FontSetting.DEFAULT,
+                theme = Theme.DEFAULT,
+                color = ColorScheme.MothPurple,
+                font = Font.DEFAULT,
                 onFontChange = {},
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 onAccountsLayoutChange = {},
                 showCodesByDefault = true,
                 onShowCodesByDefaultChange = {}

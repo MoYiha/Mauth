@@ -1,6 +1,6 @@
-package com.xinto.mauth.core.settings.model
+package com.xinto.mauth.domain.settings.model
 
-enum class ThemeSetting {
+enum class Theme {
     System,
     Dark,
     Light;

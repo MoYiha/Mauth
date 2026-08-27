@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
-import com.xinto.mauth.core.settings.model.ColorSetting
-import com.xinto.mauth.core.settings.model.FontSetting
-import com.xinto.mauth.core.settings.model.ThemeSetting
-import com.xinto.mauth.core.settings.model.SortSetting
+import com.xinto.mauth.domain.settings.model.AccountsLayout
+import com.xinto.mauth.domain.settings.model.ColorScheme
+import com.xinto.mauth.domain.settings.model.Font
+import com.xinto.mauth.domain.settings.model.Theme
+import com.xinto.mauth.domain.settings.model.AccountsSort
 import com.xinto.mauth.ui.screen.account.AccountForm
 import com.xinto.mauth.ui.screen.account.AccountScreen
 import com.xinto.mauth.ui.screen.account.AccountScreenState
@@ -90,7 +90,7 @@ private fun HomeAccountsFixture(
         state = HomeScreenState.Success(StoreFixtures.sampleAccounts),
         accountRealtimeData = remember { StoreFixtures.sampleRealtimeData },
         selectedAccounts = remember { selected.toMutableStateList() },
-        activeSortSetting = SortSetting.DEFAULT,
+        activeAccountsSort = AccountsSort.DEFAULT,
         onActiveSortChange = {},
         groups = groups,
         activeGroup = GroupFilter.All,
@@ -99,7 +99,7 @@ private fun HomeAccountsFixture(
         onGroupSelectedClick = {},
         searchAccounts = persistentListOf(),
         accountCounts = accountCounts,
-        accountsLayout = AccountsLayoutSetting.DEFAULT,
+        accountsLayout = AccountsLayout.DEFAULT,
         showCodesByDefault = false,
         modifier = Modifier.fillMaxSize(),
         showScanButton = false
@@ -140,11 +140,11 @@ private fun SettingsFixture() {
         biometrics = true,
         onBiometricsChange = {},
         onThemeNavigate = {},
-        theme = ThemeSetting.DEFAULT,
-        color = ColorSetting.MothPurple,
-        font = FontSetting.DEFAULT,
+        theme = Theme.DEFAULT,
+        color = ColorScheme.MothPurple,
+        font = Font.DEFAULT,
         onFontChange = {},
-        accountsLayout = AccountsLayoutSetting.DEFAULT,
+        accountsLayout = AccountsLayout.DEFAULT,
         onAccountsLayoutChange = {},
         showCodesByDefault = false,
         onShowCodesByDefaultChange = {},

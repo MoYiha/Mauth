@@ -22,12 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.xinto.mauth.R
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
+import com.xinto.mauth.domain.settings.model.AccountsLayout
 
 @Composable
 fun AccountLayoutDialog(
-    initialLayout: AccountsLayoutSetting,
-    onConfirm: (AccountsLayoutSetting) -> Unit,
+    initialLayout: AccountsLayout,
+    onConfirm: (AccountsLayout) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     var layout by remember { mutableStateOf(initialLayout) }
@@ -40,7 +40,7 @@ fun AccountLayoutDialog(
                     .selectableGroup()
                     .fillMaxWidth()
             ) {
-                AccountsLayoutSetting.entries.forEach {
+                AccountsLayout.entries.forEach {
                     val selected = layout == it
                     val interactionSource = remember { MutableInteractionSource() }
                     ListItem(

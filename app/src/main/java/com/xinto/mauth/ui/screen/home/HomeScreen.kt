@@ -111,8 +111,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xinto.mauth.R
 import com.xinto.mauth.core.otp.model.OtpDigest
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
-import com.xinto.mauth.core.settings.model.SortSetting
+import com.xinto.mauth.domain.settings.model.AccountsLayout
+import com.xinto.mauth.domain.settings.model.AccountsSort
 import com.xinto.mauth.domain.account.model.DomainAccount
 import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
@@ -237,7 +237,7 @@ fun HomeScreen(
         state = state,
         accountRealtimeData = realTimeData,
         selectedAccounts = selectedAccounts,
-        activeSortSetting = activeSortSetting,
+        activeAccountsSort = activeSortSetting,
         onActiveSortChange = viewModel::setActiveSort,
         groups = groups,
         activeGroup = activeGroup,
@@ -273,8 +273,8 @@ fun HomeScreen(
     state: HomeScreenState,
     accountRealtimeData: SnapshotStateMap<UUID, DomainOtpRealtimeData>,
     selectedAccounts: SnapshotStateList<UUID>,
-    activeSortSetting: SortSetting,
-    onActiveSortChange: (SortSetting) -> Unit,
+    activeAccountsSort: AccountsSort,
+    onActiveSortChange: (AccountsSort) -> Unit,
     groups: ImmutableList<DomainGroup>,
     activeGroup: GroupFilter,
     onActiveGroupChange: (GroupFilter) -> Unit,
@@ -282,7 +282,7 @@ fun HomeScreen(
     onGroupSelectedClick: () -> Unit,
     searchAccounts: ImmutableList<DomainAccount>,
     accountCounts: DomainAccountCounts,
-    accountsLayout: AccountsLayoutSetting,
+    accountsLayout: AccountsLayout,
     showCodesByDefault: Boolean,
     modifier: Modifier = Modifier,
     showScanButton: Boolean
@@ -298,7 +298,7 @@ fun HomeScreen(
 
     val topBarActions: @Composable RowScope.() -> Unit = {
         SortAction(
-            activeSortSetting = activeSortSetting,
+            activeAccountsSort = activeAccountsSort,
             onActiveSortChange = onActiveSortChange,
         )
         MoreAction(onMenuNavigate = onMoreMenuNavigate)
@@ -439,7 +439,7 @@ fun HomeScreen(
                 }
                 is HomeScreenState.Success -> {
                     when (accountsLayout) {
-                        AccountsLayoutSetting.Cards -> {
+                        AccountsLayout.Cards -> {
                             AccountCardGrid(
                                 modifier = contentModifier,
                                 accounts = state.accounts,
@@ -452,7 +452,7 @@ fun HomeScreen(
                                 showCodesByDefault = showCodesByDefault,
                             )
                         }
-                        AccountsLayoutSetting.Compact -> {
+                        AccountsLayout.Compact -> {
                             AccountCompactGrid(
                                 modifier = contentModifier,
                                 accounts = state.accounts,
@@ -578,8 +578,8 @@ private fun SearchInputField(
 
 @Composable
 private fun SortAction(
-    activeSortSetting: SortSetting,
-    onActiveSortChange: (SortSetting) -> Unit,
+    activeAccountsSort: AccountsSort,
+    onActiveSortChange: (AccountsSort) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isSortVisible by remember { mutableStateOf(false) }
@@ -600,21 +600,21 @@ private fun SortAction(
                     onDismissRequest = { isSortVisible = false },
                 ) {
                     DropdownMenuGroup(shapes = MenuDefaults.groupShapes()) {
-                        SortSetting.entries.forEachIndexed { index, sortSetting ->
+                        AccountsSort.entries.forEachIndexed { index, sortSetting ->
                             DropdownMenuItem(
-                                selected = activeSortSetting == sortSetting,
+                                selected = activeAccountsSort == sortSetting,
                                 onClick = {
                                     isSortVisible = false
                                     onActiveSortChange(sortSetting)
                                 },
                                 text = {
                                     val resource = when (sortSetting) {
-                                        SortSetting.DateAsc -> R.string.home_sort_date_ascending
-                                        SortSetting.DateDesc -> R.string.home_sort_date_descending
-                                        SortSetting.LabelAsc -> R.string.home_sort_label_ascending
-                                        SortSetting.LabelDesc -> R.string.home_sort_label_descending
-                                        SortSetting.IssuerAsc -> R.string.home_sort_issuer_ascending
-                                        SortSetting.IssuerDesc -> R.string.home_sort_issuer_descending
+                                        AccountsSort.DateAsc -> R.string.home_sort_date_ascending
+                                        AccountsSort.DateDesc -> R.string.home_sort_date_descending
+                                        AccountsSort.LabelAsc -> R.string.home_sort_label_ascending
+                                        AccountsSort.LabelDesc -> R.string.home_sort_label_descending
+                                        AccountsSort.IssuerAsc -> R.string.home_sort_issuer_ascending
+                                        AccountsSort.IssuerDesc -> R.string.home_sort_issuer_descending
                                     }
                                     Text(stringResource(resource))
                                 },
@@ -626,7 +626,7 @@ private fun SortAction(
                                 },
                                 shapes = MenuDefaults.itemShape(
                                     index = index,
-                                    count = SortSetting.entries.size
+                                    count = AccountsSort.entries.size
                                 ),
                             )
                         }
@@ -708,7 +708,7 @@ private fun ColumnScope.SearchResults(
     onAccountCopyCode: (String, String, Boolean) -> Unit,
     selectedAccounts: SnapshotStateList<UUID>,
     accountRealtimeData: SnapshotStateMap<UUID, DomainOtpRealtimeData>,
-    accountsLayout: AccountsLayoutSetting,
+    accountsLayout: AccountsLayout,
     showCodesByDefault: Boolean,
 ) {
     val query = searchTextFieldState.text.toString().trim()
@@ -722,7 +722,7 @@ private fun ColumnScope.SearchResults(
     }
     if (filteredAccounts.isNotEmpty()) {
         when (accountsLayout) {
-            AccountsLayoutSetting.Cards -> {
+            AccountsLayout.Cards -> {
                 AccountCardGrid(
                     accounts = filteredAccounts,
                     accountRealtimeData = accountRealtimeData,
@@ -738,7 +738,7 @@ private fun ColumnScope.SearchResults(
                     elevation = CardDefaults.cardElevation(),
                 )
             }
-            AccountsLayoutSetting.Compact -> {
+            AccountsLayout.Compact -> {
                 AccountCompactGrid(
                     accounts = filteredAccounts,
                     accountRealtimeData = accountRealtimeData,
@@ -1170,7 +1170,7 @@ private fun HomeScreen_Loading_Preview() {
                 state = HomeScreenState.Loading,
                 accountRealtimeData = remember { mutableStateMapOf<UUID, DomainOtpRealtimeData>() },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1179,7 +1179,7 @@ private fun HomeScreen_Loading_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1206,7 +1206,7 @@ private fun HomeScreen_Empty_Preview() {
                 state = HomeScreenState.Empty,
                 accountRealtimeData = remember { mutableStateMapOf<UUID, DomainOtpRealtimeData>() },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1215,7 +1215,7 @@ private fun HomeScreen_Empty_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1268,7 +1268,7 @@ private fun HomeScreen_Success_Preview() {
                     )
                 },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1277,7 +1277,7 @@ private fun HomeScreen_Success_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1330,7 +1330,7 @@ private fun HomeScreen_Compact_Preview() {
                     )
                 },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1339,7 +1339,7 @@ private fun HomeScreen_Compact_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
-                accountsLayout = AccountsLayoutSetting.Compact,
+                accountsLayout = AccountsLayout.Compact,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1392,7 +1392,7 @@ private fun HomeScreen_Selection_Preview() {
                     )
                 },
                 selectedAccounts = remember { mutableStateListOf(totp.id) },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1401,7 +1401,7 @@ private fun HomeScreen_Selection_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewAccountCounts,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1454,7 +1454,7 @@ private fun HomeScreen_Groups_Preview() {
                     )
                 },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(
                     DomainGroup(
@@ -1476,7 +1476,7 @@ private fun HomeScreen_Groups_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = PreviewGroupedAccountCounts,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false
@@ -1503,7 +1503,7 @@ private fun HomeScreen_Error_Preview() {
                 state = HomeScreenState.Error("Something went wrong"),
                 accountRealtimeData = remember { mutableStateMapOf<UUID, DomainOtpRealtimeData>() },
                 selectedAccounts = remember { mutableStateListOf<UUID>() },
-                activeSortSetting = SortSetting.entries.first(),
+                activeAccountsSort = AccountsSort.entries.first(),
                 onActiveSortChange = {},
                 groups = persistentListOf(),
                 activeGroup = GroupFilter.All,
@@ -1512,7 +1512,7 @@ private fun HomeScreen_Error_Preview() {
                 onGroupSelectedClick = {},
                 searchAccounts = persistentListOf(),
                 accountCounts = DomainAccountCounts.Empty,
-                accountsLayout = AccountsLayoutSetting.DEFAULT,
+                accountsLayout = AccountsLayout.DEFAULT,
                 showCodesByDefault = false,
                 modifier = Modifier.fillMaxSize(),
                 showScanButton = false

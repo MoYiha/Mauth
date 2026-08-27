@@ -1,6 +1,6 @@
-package com.xinto.mauth.core.settings.model
+package com.xinto.mauth.domain.settings.model
 
-enum class AccountsLayoutSetting {
+enum class AccountsLayout {
     Cards,
     Compact;
 

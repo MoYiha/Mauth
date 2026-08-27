@@ -1,19 +1,18 @@
-package com.xinto.mauth.core.settings
+package com.xinto.mauth.domain.settings
 
 import android.content.Context
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.xinto.mauth.core.settings.model.AccountsLayoutSetting
-import com.xinto.mauth.core.settings.model.ColorSetting
-import com.xinto.mauth.core.settings.model.FontSetting
-import com.xinto.mauth.core.settings.model.SortSetting
-import com.xinto.mauth.core.settings.model.ThemeSetting
-import kotlin.enums.enumEntries
+import com.xinto.mauth.domain.settings.model.AccountsLayout
+import com.xinto.mauth.domain.settings.model.ColorScheme
+import com.xinto.mauth.domain.settings.model.Font
+import com.xinto.mauth.domain.settings.model.AccountsSort
+import com.xinto.mauth.domain.settings.model.Theme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,8 +20,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlin.enums.enumEntries
 
-class DefaultSettings(context: Context) : Settings {
+class SettingsRepository(context: Context) {
 
     private val preferences = PreferenceDataStoreFactory.create {
         context.applicationContext.preferencesDataStoreFile("preferences")
@@ -30,83 +30,72 @@ class DefaultSettings(context: Context) : Settings {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    private val secureMode = preferenceStateFlow { it[KEY_SECURE_MODE] ?: false }
-    private val lockOnResume = preferenceStateFlow { it[KEY_LOCK_ON_RESUME] ?: false }
-    private val useBiometrics = preferenceStateFlow { it[KEY_USE_BIOMETRICS] ?: false }
-    private val useMeshGradientBackground = preferenceStateFlow { it[KEY_USE_MESH_GRADIENT_BACKGROUND] ?: false }
-    private val showCodesByDefault = preferenceStateFlow { it[KEY_SHOW_CODES_BY_DEFAULT] ?: false }
-    private val sortMode = preferenceStateFlow { it[KEY_SORT_MODE].toEnumOr(SortSetting.DEFAULT) }
-    private val accountsLayout = preferenceStateFlow { it[KEY_ACCOUNTS_LAYOUT].toEnumOr(AccountsLayoutSetting.DEFAULT) }
-    private val theme = preferenceStateFlow { it[KEY_THEME].toEnumOr(ThemeSetting.DEFAULT) }
-    private val color = preferenceStateFlow { it[KEY_COLOR].toEnumOr(ColorSetting.DEFAULT) }
-    private val font = preferenceStateFlow { it[KEY_FONT].toEnumOr(FontSetting.DEFAULT) }
+    val secureMode = preferenceStateFlow { it[KEY_SECURE_MODE] ?: false }
+    val lockOnResume = preferenceStateFlow { it[KEY_LOCK_ON_RESUME] ?: false }
+    val useBiometrics = preferenceStateFlow { it[KEY_USE_BIOMETRICS] ?: false }
+    val useMeshGradientBackground = preferenceStateFlow { it[KEY_USE_MESH_GRADIENT_BACKGROUND] ?: false }
+    val showCodesByDefault = preferenceStateFlow { it[KEY_SHOW_CODES_BY_DEFAULT] ?: false }
+    val sortMode = preferenceStateFlow { it[KEY_SORT_MODE].toEnumOr(AccountsSort.DEFAULT) }
+    val accountsLayout = preferenceStateFlow { it[KEY_ACCOUNTS_LAYOUT].toEnumOr(AccountsLayout.DEFAULT) }
+    val theme = preferenceStateFlow { it[KEY_THEME].toEnumOr(Theme.DEFAULT) }
+    val color = preferenceStateFlow { it[KEY_COLOR].toEnumOr(ColorScheme.DEFAULT) }
+    val font = preferenceStateFlow { it[KEY_FONT].toEnumOr(Font.DEFAULT) }
 
-    override fun getSecureMode(): StateFlow<Boolean> = secureMode
-    override fun getLockOnResume(): StateFlow<Boolean> = lockOnResume
-    override fun getUseBiometrics(): StateFlow<Boolean> = useBiometrics
-    override fun getUseMeshGradientBackground(): StateFlow<Boolean> = useMeshGradientBackground
-    override fun getShowCodesByDefault(): StateFlow<Boolean> = showCodesByDefault
-    override fun getSortMode(): StateFlow<SortSetting> = sortMode
-    override fun getAccountsLayout(): StateFlow<AccountsLayoutSetting> = accountsLayout
-    override fun getTheme(): StateFlow<ThemeSetting> = theme
-    override fun getColor(): StateFlow<ColorSetting> = color
-    override fun getFont(): StateFlow<FontSetting> = font
-
-    override suspend fun setSecureMode(value: Boolean) {
+    suspend fun setSecureMode(value: Boolean) {
         preferences.edit {
             it[KEY_SECURE_MODE] = value
         }
     }
 
-    override suspend fun setLockOnResume(value: Boolean) {
+    suspend fun setLockOnResume(value: Boolean) {
         preferences.edit {
             it[KEY_LOCK_ON_RESUME] = value
         }
     }
 
-    override suspend fun setUseBiometrics(value: Boolean) {
+    suspend fun setUseBiometrics(value: Boolean) {
         preferences.edit {
             it[KEY_USE_BIOMETRICS] = value
         }
     }
 
-    override suspend fun setUseMeshGradientBackground(value: Boolean) {
+    suspend fun setUseMeshGradientBackground(value: Boolean) {
         preferences.edit {
             it[KEY_USE_MESH_GRADIENT_BACKGROUND] = value
         }
     }
 
-    override suspend fun setShowCodesByDefault(value: Boolean) {
+    suspend fun setShowCodesByDefault(value: Boolean) {
         preferences.edit {
             it[KEY_SHOW_CODES_BY_DEFAULT] = value
         }
     }
 
-    override suspend fun setSortMode(value: SortSetting) {
+    suspend fun setSortMode(value: AccountsSort) {
         preferences.edit {
             it[KEY_SORT_MODE] = value.name
         }
     }
 
-    override suspend fun setAccountsLayout(value: AccountsLayoutSetting) {
+    suspend fun setAccountsLayout(value: AccountsLayout) {
         preferences.edit {
             it[KEY_ACCOUNTS_LAYOUT] = value.name
         }
     }
 
-    override suspend fun setTheme(value: ThemeSetting) {
+    suspend fun setTheme(value: Theme) {
         preferences.edit {
             it[KEY_THEME] = value.name
         }
     }
 
-    override suspend fun setColor(value: ColorSetting) {
+    suspend fun setColor(value: ColorScheme) {
         preferences.edit {
             it[KEY_COLOR] = value.name
         }
     }
 
-    override suspend fun setFont(value: FontSetting) {
+    suspend fun setFont(value: Font) {
         preferences.edit {
             it[KEY_FONT] = value.name
         }

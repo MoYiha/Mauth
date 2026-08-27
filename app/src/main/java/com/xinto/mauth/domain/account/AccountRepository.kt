@@ -3,12 +3,12 @@ package com.xinto.mauth.domain.account
 import com.xinto.mauth.core.otp.exporter.OtpExporter
 import com.xinto.mauth.core.otp.model.OtpData
 import com.xinto.mauth.core.otp.model.OtpType
-import com.xinto.mauth.core.settings.model.SortSetting
+import com.xinto.mauth.domain.settings.model.AccountsSort
 import com.xinto.mauth.db.dao.account.AccountsDao
 import com.xinto.mauth.db.dao.account.entity.EntityAccount
 import com.xinto.mauth.db.dao.rtdata.RtdataDao
 import com.xinto.mauth.db.dao.rtdata.entity.EntityCountData
-import com.xinto.mauth.domain.SettingsRepository
+import com.xinto.mauth.domain.settings.SettingsRepository
 import com.xinto.mauth.domain.account.model.DomainAccount
 import com.xinto.mauth.domain.account.model.DomainAccountCounts
 import com.xinto.mauth.domain.account.model.DomainAccountInfo
@@ -32,7 +32,7 @@ class AccountRepository(
     fun getAccounts(groupFilter: GroupFilter): Flow<List<DomainAccount>> {
         return combine(
             accountsDao.observeAll(),
-            settingsRepository.getSortMode()
+            settingsRepository.sortMode
         ) { accounts, sort ->
             accounts
                 .filter { groupFilter.matches(it.groupId) }
@@ -59,7 +59,7 @@ class AccountRepository(
     fun getGroupedAccounts(): Flow<Map<UUID?, List<DomainAccount>>> {
         return combine(
             accountsDao.observeAll(),
-            settingsRepository.getSortMode()
+            settingsRepository.sortMode
         ) { accounts, sort ->
             accounts
                 .groupBy { it.groupId }
@@ -71,14 +71,14 @@ class AccountRepository(
         }.flowOn(Dispatchers.IO)
     }
 
-    private fun List<DomainAccount>.sortedFor(sort: SortSetting): List<DomainAccount> {
+    private fun List<DomainAccount>.sortedFor(sort: AccountsSort): List<DomainAccount> {
         return when (sort) {
-            SortSetting.IssuerAsc -> sortedBy { it.issuer }
-            SortSetting.IssuerDesc -> sortedByDescending { it.issuer }
-            SortSetting.DateAsc -> sortedBy { it.createdMillis }
-            SortSetting.DateDesc -> sortedByDescending { it.createdMillis }
-            SortSetting.LabelAsc -> sortedBy { it.label }
-            SortSetting.LabelDesc -> sortedByDescending { it.label }
+            AccountsSort.IssuerAsc -> sortedBy { it.issuer }
+            AccountsSort.IssuerDesc -> sortedByDescending { it.issuer }
+            AccountsSort.DateAsc -> sortedBy { it.createdMillis }
+            AccountsSort.DateDesc -> sortedByDescending { it.createdMillis }
+            AccountsSort.LabelAsc -> sortedBy { it.label }
+            AccountsSort.LabelDesc -> sortedByDescending { it.label }
         }
     }
 
