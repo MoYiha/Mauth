@@ -52,15 +52,19 @@ class AuthRepository(context: Context) {
         }
     }
 
-    fun updateCode(code: String) {
-        prefs.edit {
-            putString(KEY_CODE, code)
+    suspend fun updateCode(code: String) {
+        withContext(Dispatchers.IO) {
+            prefs.edit(commit = true) {
+                putString(KEY_CODE, code)
+            }
         }
     }
 
-    fun removeCode() {
-        prefs.edit {
-            remove(KEY_CODE)
+    suspend fun removeCode() {
+        withContext(Dispatchers.IO) {
+            prefs.edit(commit = true) {
+                remove(KEY_CODE)
+            }
         }
     }
 
